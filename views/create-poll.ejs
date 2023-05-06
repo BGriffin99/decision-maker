@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Create Poll Page</title>
+
+  <meta charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+
+  <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" />
+  <link rel="stylesheet" href="/vendor/border-box.css" />
+  <link rel="stylesheet" href="/styles/main.css" />
+  <link rel="stylesheet" href="/styles/layout.css" />
+
+  <script src="/vendor/jquery-3.0.0.js"></script>
+  <script defer src="/scripts/app.js"></script>
+</head>
+
+<body>
+  <header>
+    <div id ="logo">Decision Maker</div>
+  </header>
+
+  <main class="container">
+    <section class="poll-section">
+      <form class="poll-form">
+        <div class="poll-question">
+          <label for="question">Write your question</label>
+          <textarea name="text" id="question" autofocus="autofocus"> </textarea>
+        </div>
+        <div class="poll-question">
+          <label for="description">Description (optional)</label>
+          <textarea name="text" id="description"> </textarea>
+        </div>
+        <div class="poll-option">
+          <label for="poll-option1">Poll answer options</label>
+          <textarea name="text" id="poll-option1"> </textarea>
+        </div>
+        <div class="poll-option">
+          <textarea name="text" id="poll-option2"> </textarea>
+        </div>
+        <div class="poll-option">
+          <button type="button" class="add-option-button">Additional option</button>
+        </div>
+        <div class="creator-email">
+          <label name="email">Enter your email address</label>
+          <input name="email" type="email" id="email" placeholder="eee@eee.com">
+        </div>
+        <div class="user-emails">
+          <label name="emails">Enter emails of people you would like to send this poll</label>
+          <input name="emails" type="emails" id="emails" placeholder="eee@eee.com">
+        </div>
+        <div class="submit">
+          <button type="button" class="submit-button">Submit poll</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+</body>
+
+</html>
