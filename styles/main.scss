@@ -14,7 +14,7 @@ header{
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 100px;
+  height: 80px;
   width:100%;
   margin: 0;
   padding-left: 5%;
@@ -28,11 +28,7 @@ header{
   font-size: 2em;
 }
 
-.container {
-  width:100%;
-}
-
-.poll-sectoion {
+.container, .poll-sectoion {
   width:100%;
 }
 
@@ -41,26 +37,35 @@ header{
   justify-content: space-between;
   align-items: center;
   width: 70%;
+  height: auto;
   margin: 0 15%;
+  padding: 5px;
   text-align: center;
   border: solid grey 3px;
-  padding: 20px;
-  border-radius: 2%;
-  background:
-  linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
-  linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
-  linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
+  border-radius: 10px;
+  background: darkgrey;
 }
 
-
-
-#question, #description, #poll-option1, #poll-option2, #email, #emails {
-  width:100%;
-  height:2rem;
-  margin: 2px 0 10px;
+.mb-3, .form-floating mb-3 {
+  margin: 0 10px;
 }
+
 
 .add-option-button, .submit-button {
-  margin: 10px 0 30px;
+  margin: 0 0 15px;
+  height: 30px;
+  width: 180px;
+  border-radius: 5px;
+  background-color: grey;
+  color: white;
 }
 
+.add-option-button:hover, .submit-button:hover {
+  background-color: green;
+}
+
+.add-option-button:active, .submit-button:active {
+  background-color:#3ad517;
+  color: black;
+  transform: translateY(4px);
+}
