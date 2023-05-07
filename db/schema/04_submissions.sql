@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS submissions CASCADE;
+CREATE TABLE submissions (
+  id SERIAL PRIMARY KEY,
+  poll_id INTEGER NOT NULL REFERENCES polls(id) ON DELETE CASCADE,
+  choices_rank INTEGER [] NOT NULL,
+  name VARCHAR(255)
+);
