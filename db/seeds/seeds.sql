@@ -1,14 +1,23 @@
-INSERT INTO users (email)
-VALUES ('email@gmail.com');
+INSERT INTO users (email, name)
+VALUES ('ariel@gmail.com', 'Ariel'),
+  ('brad@gmail.com', 'Brad');
 INSERT INTO polls (user_id, title)
-VALUES (1, 'Rank these food items from best to worst');
+VALUES (1, 'Rank these food items from best to worst'),
+  (2, 'Rank these Harry Potter books/movies from best to worst');
 INSERT INTO choices (poll_id, choice, description)
 VALUES (1, 'Pizza', ''),
   (1, 'Chicken', ''),
   (1, 'Steak', ''),
   (1, 'Salad', ''),
   (1, 'Sushi', ''),
-  (1, 'Pasta', 'Any kind');
+  (1, 'Pasta', 'Any kind'),
+  (2, 'Harry Potter and the Philosopher''s Stone',''),
+  (2, 'Harry Potter and the Chamber of Secrets', ''),
+  (2, 'Harry Potter and the Prisoner of Azkaban',''),
+  (2, 'Harry Potter and the Goblet of Fire', ''),
+  (2, 'Harry Potter and the Order of the Phoenix', ''),
+  (2, 'Harry Potter and the Half-Blood Prince', ''),
+  (2, 'Harry Potter and the Deathly Hallows', '');
 INSERT INTO submissions (poll_id, choices_rank, name)
 VALUES (1, '{1,2,3,4,5,6}', 'Bob'),
   (1, '{6,5,4,3,2,1}', 'Joe'),
@@ -29,21 +38,8 @@ VALUES (1, '{1,2,3,4,5,6}', 'Bob'),
   (1, '{2,3,1,4,5,6}', ''),
   (1, '{5,6,1,4,3,2}', 'A B C'),
   (1, '{4,2,6,1,5,3}', 'Brad'),
-  (1, '{5,4,6,3,2,1}', 'Melody');
-INSERT INTO users (email)
-VALUES ('email@icloud.com');
-INSERT INTO polls (user_id, title)
-VALUES (2, 'Rank these Harry Potter books/movies from best to worst');
-INSERT INTO choices (poll_id, choice, description)
-VALUES (2, 'Harry Potter and the Philosopher''s Stone', ''),
-  (2, 'Harry Potter and the Chamber of Secrets', ''),
-  (2, 'Harry Potter and the Prisoner of Azkaban', ''),
-  (2, 'Harry Potter and the Goblet of Fire', ''),
-  (2, 'Harry Potter and the Order of the Phoenix', ''),
-  (2, 'Harry Potter and the Half-Blood Prince', ''),
-  (2, 'Harry Potter and the Deathly Hallows', '');
-INSERT INTO submissions (poll_id, choices_rank, name)
-VALUES (2, '{7,8,9,10,11,12,13}', 'Steve'),
+  (1, '{5,4,6,3,2,1}', 'Melody'),
+  (2, '{7,8,9,10,11,12,13}', 'Steve'),
   (2, '{13,12,11,10,9,8,7}', 'John'),
   (2, '{8,13,7,9,11,12,10}', 'Teddy'),
   (2, '{10,11,12,13,9,8,7}', 'Becca'),
