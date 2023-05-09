@@ -1,3 +1,4 @@
+@import 'main.scss';
 
 .vote-form{
   display: flex;
@@ -9,8 +10,8 @@
   padding: 10px;
   text-align: center;
   border-radius: 10px;
-  background: rgb(209, 210, 214);
-  color: rgb(34, 37, 70);
+  background: $color-form-two;
+  color:$color-bg;
 }
 
 .vote-question {
@@ -33,19 +34,19 @@
   background-color: rgb(34, 37, 70, 0.7);
   display: inline-block;
   text-align: center;
-  color: white;
+  color: $color-font-main;
   margin: 15px 0;
   padding: 5px;
   cursor: move; /*related to drag and drop functionality*/
 }
 
 .vote-option:hover {
-  background-color: rgb(34, 37, 70);
+  background-color: $color-bg;
 }
 
 .mb-4 {
   width:30%;
   min-width: 150px;
   margin: 0 15px;
-  color: rgb(34, 37, 70);
+  color: $color-bg;
 }

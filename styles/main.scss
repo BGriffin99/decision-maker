@@ -1,3 +1,11 @@
+$color-bg: rgb(34, 37, 70);
+$color-form-one: rgb(71, 72, 102);
+$color-form-two:rgb(209, 210, 214);
+$color-btn:rgb(41, 101, 138);
+$color-font-main: white;
+
+$font-title: 'Righteous', cursive;
+$font-main: 'Amaranth', sans-serif;
 
 body {
   display: flex;
@@ -5,7 +13,8 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100hv;
-  background: rgb(34, 37, 70) !important;
+  background: $color-bg !important;
+  font-family: $font-main !important;
 }
 
 header{
@@ -23,8 +32,8 @@ header{
   margin-left: 1px;
   text-align: left;
   font-size: 2.3em;
-  font-family: 'Righteous', cursive;
-  color: white;
+  font-family: $font-title;
+  color: $color-font-main;
 }
 
 .container, .poll-sectoion {
@@ -41,8 +50,8 @@ header{
   padding: 5px;
   text-align: center;
   border-radius: 10px;
-  background: rgb(71, 72, 102);
-  color: white;
+  background: $color-form-one;
+  color: $color-font-main;
 }
 
 .poll-question {
@@ -66,11 +75,11 @@ header{
 
 .mb-3 {
   margin: 0 15px;
-  color: rgb(34, 37, 70);
+  color: $color-bg;
 }
 
 .email, .emails {
-  color: rgb(34, 37, 70);
+  color: $color-bg;
 }
 
 .add-option-button, .submit-button {
@@ -78,22 +87,21 @@ header{
   height: 30px;
   width: 180px;
   border-radius: 7px;
-  background-color: rgb(209, 210, 214);
-  color:rgb(34, 37, 70);
-  border-color: rgb(34, 37, 70);
+  background-color: $color-form-two;
+  color:$color-bg;
+  border-color: $color-bg;
   border-style: solid;
-
 }
 
 .add-option-button:hover, .submit-button:hover {
-  background-color: rgb(41, 101, 138);
+  background-color: $color-btn;
   border-color: white;
   border-style: solid;
-  color: white;
+  color: $color-font-main;
 }
 
 .add-option-button:active, .submit-button:active {
-  background-color:rgb(34, 37, 70);
-  color: white;
+  background-color:$color-bg;
+  color: $color-font-main;
   transform: translateY(4px);
 }
