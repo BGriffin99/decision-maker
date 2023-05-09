@@ -48,7 +48,7 @@
           <div class="poll-set">
             <div class="poll-option">
               <label for="option" class="form-label">Poll options</label>
-              <input type="text" class="form-control" id="option">
+              <input type="text" class="form-control" id="option" required>
             </div>
             <div class="poll-description">
               <label for="description" class="form-label">Description</label>
@@ -58,7 +58,7 @@
 <!-- Poll option 2-->
           <div class="poll-set">
             <div class="poll-option">
-              <input type="text" class="form-control" id="option">
+              <input type="text" class="form-control" id="option" required>
             </div>
             <div class="poll-description">
               <input type="text" class="form-control" id="description">
@@ -67,7 +67,7 @@
 <!-- Poll option 3 -->
           <div class="poll-set">
             <div class="poll-option">
-              <input type="text" class="form-control" id="option">
+              <input type="text" class="form-control" id="option" required>
             </div>
             <div class="poll-description">
               <input type="text" class="form-control" id="description">
@@ -78,7 +78,7 @@
           <button type="button" class="add-option-button" id="createOption">Add option</button>
 <!-- Enter creator email -->
         <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="email" placeholder="name@example.com">
+          <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
           <label for="email" class="email">Enter your email address</label>
         </div>
 <!-- Enter voters emails -->
@@ -87,7 +87,7 @@
           <label for="name" class="emails">Enter your name</label>
         </div>
 <!-- Button to submit -->
-          <button type="button" class="submit-button">Submit poll</button>
+          <button type="submit" class="submit-button">Submit poll</button>
       </form>
     </section>
   </main>
