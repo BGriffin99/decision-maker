@@ -5,8 +5,8 @@
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
-// This code will set the column's opacity to 20% when the user begins dragging it,
-// then return it to 100% when the dragging event ends.
+  // This code will set the column's opacity to 20% when the user begins dragging it,
+  // then return it to 100% when the dragging event ends.
   function handleDragStart(e) {
     this.style.opacity = '0.2';
     //store the source element's HTML when the drag starts
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       item.classList.remove('over');
     });
   }
-// Function adds the over class when the column is dragged over, and remove it when leave.
+  // Function adds the over class when the column is dragged over, and remove it when leave.
   function handleDragOver(e) {
     e.preventDefault();
     return false;
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   let items = document.querySelectorAll('.vote-set .vote-option');
-  items.forEach(function(item) {
+  items.forEach(function (item) {
     item.addEventListener('dragstart', handleDragStart);
     item.addEventListener('dragover', handleDragOver);
     item.addEventListener('dragenter', handleDragEnter);
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 
-// Add new option to create-poll page
+//Add new option to create-poll page
 document.getElementById("createOption").onclick = function () {
   let div = document.createElement("div");
   div.innerHTML = `
@@ -71,8 +71,5 @@ document.getElementById("createOption").onclick = function () {
       </div>
     </div>
     `;
-  document.getElementById('poll-options').appendChild(div);
+  document.getElementsByClassName('poll-options')[0].appendChild(div);
 };
-
-
-
