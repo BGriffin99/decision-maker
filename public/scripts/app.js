@@ -56,3 +56,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
     return false;
   }
 });
+
+
+// Add new option to create-poll page
+document.getElementById("createOption").onclick = function () {
+  let div = document.createElement("div");
+  div.innerHTML = `
+    <div class="poll-set">
+      <div class="poll-option">
+        <input type="text" class="form-control" id="option">
+      </div>
+      <div class="poll-description">
+        <input type="text" class="form-control" id="description">
+      </div>
+    </div>
+    `;
+  document.getElementById('poll-options').appendChild(div);
+};
+
+
+
