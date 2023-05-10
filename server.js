@@ -5,6 +5,7 @@ require('dotenv').config();
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
+const mailer = require('mailer');
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -31,6 +32,7 @@ app.use(express.static('public'));
 const userApiRoutes = require('./routes/users-api');
 const widgetApiRoutes = require('./routes/widgets-api');
 const usersRoutes = require('./routes/users');
+const pollsApiRoutes = require('./routes/polls-api');
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
@@ -38,13 +40,17 @@ const usersRoutes = require('./routes/users');
 app.use('/api/users', userApiRoutes);
 app.use('/api/widgets', widgetApiRoutes);
 app.use('/users', usersRoutes);
+app.use('/api/polls', pollsApiRoutes);
 // Note: mount other resources here, using the same pattern above
 
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
+const router = express.Router();
+const db = require('./db/connection'); //initialize
 
-app.get('/', (req, res) => {
+
+router.get('/', function(_req, res) {
   res.render('index');
 });
 
