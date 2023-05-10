@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const queries = require('../db/queries/queries');
 
-router.post('/:id/submissions', async function(req, res, next) {
+router.post('/:id/vote', async function(req, res, next) {
     try {
       const { pollId } = req.params;
       const { name, rankings } = req.body;
@@ -20,13 +20,15 @@ router.post('/:id/submissions', async function(req, res, next) {
       );
 
       // Generate admin link and result link
-      const adminLink = `${req.protocol}://${req.get('host')}/polls/${pollId}/results`;
-      const voteLink = `${req.protocol}://${req.get('host')}/polls/${pollId}/vote`;
+      // const adminLink = `${req.protocol}://${req.get('host')}/polls/${pollId}/results`;
+      // const voteLink = `${req.protocol}://${req.get('host')}/polls/${pollId}`;
 
       // Send email to the creator with the links
       await mailer.sendSubmissionReceivedEmail(creator_email, adminLink, voteLink);
-
-      res.sendStatus(204);
+      let adminLink = "/polls/";
+      adminLink += (await queries.getPollLinks(pollID)).user_link;
+      adminLink += "/results";
+      res.redirect(adminLink);
     } catch (err) {
       console.error(err);
       res.sendStatus(500);
@@ -69,12 +71,11 @@ router.post('/:id/submissions', async function(req, res, next) {
 // vote link
 router.get('/:id', async function(req, res, next) {
   try {
-    const { rows: [{ choices }] } = await db.query(
-      'SELECT json_agg(choices) FROM choices WHERE poll_id = $1',
-      [req.params.id]
-    );
-    res.render('show-poll', { choices, pollId: req.params.id });
-  } catch (err) {
+    const submissionLink = req.params.id;
+    const poll = await queries.getPollBySubmissionLink(submissionLink);
+    console.log(poll);
+    res.render('show-poll', { submissionLink: submissionLink, title: poll[0].title, poll: poll });
+  } catch (error) {
     console.error(err);
     res.sendStatus(500);
   }
@@ -86,15 +87,7 @@ router.get('/:id/results', async function(req, res, next) {
     const userLink = req.params.id;
     const poll = await queries.getPollByUserLink(userLink);
     console.log(poll);
-    let templateVars = {
-      pollID: poll[0].poll_id,
-      title: poll[0].title,
-      choiceID: poll[0].choice_id,
-      choice: poll[0].choice_title,
-      choiceDescription: poll[0].choice_description
-    };
-    console.log(templateVars);
-    res.render('result-poll', templateVars);
+    res.render('result-poll', { title: poll[0].title, poll: poll });
   } catch (error) {
     next(error);
   }

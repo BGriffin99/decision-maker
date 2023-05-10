@@ -81,6 +81,24 @@ const getPollForVoting = submissionLink => {
     });
 };
 
+const getPollBySubmissionLink = submissionLink => {
+  return db.query(`
+  SELECT polls.id AS poll_id,
+    polls.title AS title,
+    choices.id AS choice_id,
+    choices.choice AS choice_title,
+    choices.description AS choice_description
+  FROM polls
+    JOIN choices ON polls.id = choices.poll_id
+  WHERE polls.submission_link = $1;`,
+  [submissionLink]
+  )
+    .then(res => res.rows)
+    .catch(err => {
+      throw new Error(`Failed to get poll: ${err.message}`);
+    });
+};
+
 const getPollByUserLink = userLink => {
   return db.query(`
   SELECT polls.id AS poll_id,
@@ -206,6 +224,7 @@ module.exports = {
   addSubmission,
   getPollTitle,
   getPollForVoting,
+  getPollBySubmissionLink,
   getPollByUserLink,
   getChoiceCount,
   getPollResults,
