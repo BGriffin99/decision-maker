@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   // This code will set the column's opacity to 20% when the user begins dragging it,
   // then return it to 100% when the dragging event ends.
   function handleDragStart(e) {
-    this.style.opacity = '0.2';
+    this.style.opacity = '1';
     //store the source element's HTML when the drag starts
     dragSrcEl = this;
     e.dataTransfer.effectAllowed = 'move';
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     this.classList.remove('over');
   }
 
-  let items = document.querySelectorAll('.vote-set .vote-option');
+  let items = document.querySelectorAll('.vote-form .vote-set');
   items.forEach(function (item) {
     item.addEventListener('dragstart', handleDragStart);
     item.addEventListener('dragover', handleDragOver);
