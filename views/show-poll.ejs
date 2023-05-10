@@ -47,7 +47,7 @@
 <!-- Vote options-->
         <div class="vote-set">
           <% poll.forEach(function(item) { %>
-            <input type="text" draggable="true" class="vote-option" value="<%= item.choice_title %>">
+            <input type="text" draggable="true" class="vote-option" name="<%= item.choice_id %>" value="<%= item.choice_title %>">
           <% }) %>
         </div>
 <!-- Enter voters name -->

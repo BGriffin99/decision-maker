@@ -64,7 +64,7 @@ document.getElementById("createOption").onclick = function () {
   div.innerHTML = `
     <div class="poll-set">
       <div class="poll-option">
-        <input type="text" class="form-control" id="option" name="choice">
+        <input type="text" class="form-control" id="option" name="choice" required>
       </div>
       <div class="poll-description">
         <input type="text" class="form-control" id="description" name="choicedescription">
@@ -73,6 +73,8 @@ document.getElementById("createOption").onclick = function () {
     `;
   document.getElementsByClassName('poll-options')[0].appendChild(div);
 };
+
+// Function creat a random color for the chart
 
 
 
