@@ -64,10 +64,10 @@ document.getElementById("createOption").onclick = function () {
   div.innerHTML = `
     <div class="poll-set">
       <div class="poll-option">
-        <input type="text" class="form-control" id="option" required>
+        <input type="text" class="form-control" id="option" name="choice">
       </div>
       <div class="poll-description">
-        <input type="text" class="form-control" id="description">
+        <input type="text" class="form-control" id="description" name="choicedescription">
       </div>
     </div>
     `;

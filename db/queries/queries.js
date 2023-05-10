@@ -1,12 +1,11 @@
-require('dotenv').config({path: '../../.env'});
 const db = require('../connection');
 
-const addUser = (email) => {
+const addUser = (email, name) => {
   return db.query(`
-  INSERT INTO users (email)
-  VALUES ($1)
+  INSERT INTO users (email, name)
+  VALUES ($1, $2)
   RETURNING id;`,
-  [email]
+  [email, name]
   )
     .then(res => res.rows)
     .catch(err => {
@@ -66,8 +65,8 @@ const getPollTitle = pollId => {
 
 const getPollForVoting = submissionLink => {
   return db.query(`
-  SELECT polls.id,
-    polls.title,
+  SELECT polls.id AS poll_id,
+    polls.title AS title,
     choices.id AS choice_id,
     choices.title AS choice_title,
     choices.description AS choice_description
@@ -84,14 +83,14 @@ const getPollForVoting = submissionLink => {
 
 const getPollByUserLink = userLink => {
   return db.query(`
-  SELECT polls.id,
-    polls.title,
+  SELECT polls.id AS poll_id,
+    polls.title AS title,
     choices.id AS choice_id,
-    choices.title AS choice_title,
+    choices.choice AS choice_title,
     choices.description AS choice_description
   FROM polls
     JOIN choices ON polls.id = choices.poll_id
-  WHERE polls.submission_link = $1;`,
+  WHERE polls.user_link = $1;`,
   [userLink]
   )
     .then(res => res.rows)
@@ -148,7 +147,7 @@ const getPollLinks = pollId => {
   WHERE polls.id = $1;`,
   [pollId]
   )
-    .then(res => res.rows)
+    .then(res => res.rows[0])
     .catch(err => {
       throw new Error(`Failed to get user: ${err.message}`);
     });
@@ -168,6 +167,38 @@ const getUser = pollId => {
     });
 };
 
+const getUserID = (email, name) => {
+  return db.query(`
+  SELECT id
+  FROM users
+  WHERE email = $1
+    AND name = $2
+  ORDER BY id DESC
+  LIMIT 1;`,
+  [email, name]
+  )
+    .then(res => res.rows[0])
+    .catch(err => {
+      throw new Error(`Failed to get user: ${err.message}`);
+    });
+};
+
+const getPollID = (userID, title) => {
+  return db.query(`
+  SELECT id
+  FROM polls
+  WHERE user_id = $1
+    AND title = $2
+  ORDER BY id DESC
+  LIMIT 1;`,
+  [userID, title]
+  )
+    .then(res => res.rows[0])
+    .catch(err => {
+      throw new Error(`Failed to get poll: ${err.message}`);
+    });
+};
+
 module.exports = {
   addUser,
   addPoll,
@@ -179,5 +210,7 @@ module.exports = {
   getChoiceCount,
   getPollResults,
   getPollLinks,
-  getUser
+  getUser,
+  getUserID,
+  getPollID
 };

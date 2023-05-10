@@ -37,40 +37,40 @@
 
   <main class="container">
     <section class="poll-section">
-      <form class="poll-form">
+      <form class="poll-form" method="POST" action="/create">
 <!-- Poll question-->
         <div class="poll-question">
           <label for="question" class="form-label">Write your question</label>
-          <input type="text" class="form-control" id="question">
+          <input type="text" class="form-control" id="question" name="title">
         </div>
 <!-- Poll option 1-->
         <div class="poll-options">
           <div class="poll-set">
             <div class="poll-option">
               <label for="option" class="form-label">Poll options</label>
-              <input type="text" class="form-control" id="option" required>
+              <input type="text" class="form-control" id="option" name="choice" required>
             </div>
             <div class="poll-description">
               <label for="description" class="form-label">Description</label>
-              <input type="text" class="form-control" id="description">
+              <input type="text" class="form-control" id="description" name="choicedescription">
             </div>
           </div>
 <!-- Poll option 2-->
           <div class="poll-set">
             <div class="poll-option">
-              <input type="text" class="form-control" id="option" required>
+              <input type="text" class="form-control" id="option" name="choice" required>
             </div>
             <div class="poll-description">
-              <input type="text" class="form-control" id="description">
+              <input type="text" class="form-control" id="description" name="choicedescription">
             </div>
           </div>
 <!-- Poll option 3 -->
           <div class="poll-set">
             <div class="poll-option">
-              <input type="text" class="form-control" id="option" required>
+              <input type="text" class="form-control" id="option" name="choice">
             </div>
             <div class="poll-description">
-              <input type="text" class="form-control" id="description">
+              <input type="text" class="form-control" id="description" name="choicedescription">
             </div>
           </div>
         </div>
@@ -78,12 +78,12 @@
           <button type="button" class="add-option-button" id="createOption">Add option</button>
 <!-- Enter creator email -->
         <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+          <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
           <label for="email" class="email">Enter your email address</label>
         </div>
 <!-- Enter voters emails -->
         <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="name" placeholder=" ">
+          <input type="text" class="form-control" id="name" name="name" placeholder=" ">
           <label for="name" class="emails">Enter your name</label>
         </div>
 <!-- Button to submit -->
@@ -96,13 +96,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
   crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
-  integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
-  integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
-  crossorigin="anonymous"></script>
-
 </body>
-
 </html>
