@@ -18,9 +18,11 @@ router.post("/", async (req, res) => {
 
     const pollID = (await queries.getPollID(userID, title)).id;
     const choices = req.body.choice;
-    let choiceDescription = "";
-    for (let choice of choices) {
-      await queries.addChoice(pollID, choice, choiceDescription);
+    const choiceDescription = req.body.choicedescription;
+    for (let i = 0; i < choices.length; i++) {
+      if (choices[i] !== "") {
+        await queries.addChoice(pollID, choices[i], choiceDescription[i]);
+      }
     }
 
     let adminLink = "/polls/";
