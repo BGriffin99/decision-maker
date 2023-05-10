@@ -64,7 +64,7 @@ document.getElementById("createOption").onclick = function () {
   div.innerHTML = `
     <div class="poll-set">
       <div class="poll-option">
-        <input type="text" class="form-control" id="option">
+        <input type="text" class="form-control" id="option" required>
       </div>
       <div class="poll-description">
         <input type="text" class="form-control" id="description">
@@ -73,3 +73,13 @@ document.getElementById("createOption").onclick = function () {
     `;
   document.getElementsByClassName('poll-options')[0].appendChild(div);
 };
+
+
+
+
+
+
+
+
+
+
