@@ -141,9 +141,22 @@ const getPollResults = pollId => {
     });
 };
 
+const getPollLinks = pollId => {
+  return db.query(`
+  SELECT user_link, submission_link
+  FROM polls
+  WHERE polls.id = $1;`,
+  [pollId]
+  )
+    .then(res => res.rows)
+    .catch(err => {
+      throw new Error(`Failed to get user: ${err.message}`);
+    });
+};
+
 const getUser = pollId => {
   return db.query(`
-  SELECT email
+  SELECT email, name
   FROM users
     JOIN polls ON users.id = polls.user_id
   WHERE polls.id = $1;`,
@@ -165,5 +178,6 @@ module.exports = {
   getPollByUserLink,
   getChoiceCount,
   getPollResults,
+  getPollLinks,
   getUser
 };
