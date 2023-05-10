@@ -1,11 +1,10 @@
 // Client facing scripts here
 
-
 // Function drag and drop for show-poll.ejs
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
-  // This code will set the column's opacity to 20% when the user begins dragging it,
+  // This code will set the column's opacity when the user begins dragging it,
   // then return it to 100% when the dragging event ends.
   function handleDragStart(e) {
     this.style.opacity = '1';
@@ -35,6 +34,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
     this.classList.remove('over');
   }
 
+  // Functions for the mobile screen --------------
+  let dragSrcEl = null;
+  let activeElement = null;
+  let initialPosition = null;
+
+  const handleTouchStart = function (e) {
+    e.preventDefault();
+    console.log('handleTouchStart');
+    this.style.opacity = '0.5';
+    activeElement = this;
+    initialPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+  function handleTouchMove(e) {
+    e.preventDefault();
+    if (activeElement) {
+      const currentPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      const dx = currentPos.x - initialPosition.x;
+      const dy = currentPos.y - initialPosition.y;
+      activeElement.style.transform = `translate(${dx}px, ${dy}px)`;
+    }
+  }
+  //--------------------------------
+
   let items = document.querySelectorAll('.vote-form .vote-set');
   items.forEach(function (item) {
     item.addEventListener('dragstart', handleDragStart);
@@ -42,6 +64,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('dragenter', handleDragEnter);
     item.addEventListener('dragleave', handleDragLeave);
     item.addEventListener('dragend', handleDragEnd);
+
+    item.addEventListener('touchstart', handleTouchStart);
+    item.addEventListener('touchend', handleDragEnd);
+    item.addEventListener('touchmove', handleTouchMove);
+
     item.addEventListener('drop', handleDrop); // new handler in amongst the other handlers
   });
 
@@ -58,7 +85,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 
-//Add new option to create-poll page
+//------------------------------------------------------------------------------------------------
+// Function add new option to create-poll page
 document.getElementById("createOption").onclick = function () {
   let div = document.createElement("div");
   div.innerHTML = `
@@ -74,13 +102,7 @@ document.getElementById("createOption").onclick = function () {
   document.getElementsByClassName('poll-options')[0].appendChild(div);
 };
 
-// Function creat a random color for the chart
-
-
-
-
-
-
+//-------------------------------------------------------------------------------------------------
 
 
 
