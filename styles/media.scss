@@ -1,0 +1,12 @@
+@import 'main.scss';
+
+@media screen and (max-width: 768px) {
+  #app-description {
+    text-align: justify;
+    padding: 10px 15px;
+  }
+
+.result-vote {
+  padding:5px;
+}
+}

@@ -1,53 +1,54 @@
+@import 'main.scss';
 
 .title{
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 80%;
-    margin: 10%;
-    border-radius: 10px;
-    background: rgb(71, 72, 102);
-    color: white;
-    padding:30px 0;
-  }
-  
-  #home-logo{
-    margin-top: 20px;
-  }
-  
-  #home-title{
-    width:100%;
-    text-align: center;
-    font-size: 4em;
-    font-family: 'Righteous', cursive;
-  }
-  
-  #app-description {
-    text-align: justify;
-    padding: 20px 160px;
-  }
-  
-  .create-button {
-    height: 30px;
-    width: 180px;
-    margin: 10px;
-    border-radius: 7px;
-    background-color: rgb(209, 210, 214);
-    color:rgb(34, 37, 70);
-    border-color: rgb(34, 37, 70);
-    border-style: solid;
-  }
-  
-  .create-button:hover {
-    background-color: rgb(41, 101, 138);
-    border-color: white;
-    border-style: solid;
-    color: white;
-  }
-  
-  .create-button:active {
-    background-color:rgb(34, 37, 70);
-    color: white;
-    transform: translateY(4px);
-  }
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 80%;
+  margin: 10%;
+  border-radius: 10px;
+  background: $color-form-one;
+  color: $color-font-main;
+  padding:30px 0;
+}
+
+#home-logo{
+  margin-top: 20px;
+}
+
+#home-title{
+  width:100%;
+  text-align: center;
+  font-size: 4em;
+  font-family: $font-title;
+}
+
+#app-description {
+  text-align: justify;
+  padding: 20px 160px;
+}
+
+.create-button {
+  height: 30px;
+  width: 180px;
+  margin: 10px;
+  border-radius: 7px;
+  background-color: $color-form-two;
+  color: $color-bg;
+  border-color: $color-bg;
+  border-style: solid;
+}
+
+.create-button:hover {
+  background-color: $color-btn;
+  border-color: white;
+  border-style: solid;
+  color: $color-font-main;
+}
+
+.create-button:active {
+  background-color:rgb(34, 37, 70);
+  color: $color-font-main;
+  transform: translateY(4px);
+}
