@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS choices CASCADE;
+CREATE TABLE choices (
+  id SERIAL PRIMARY KEY,
+  poll_id INTEGER NOT NULL REFERENCES polls(id) ON DELETE CASCADE,
+  choice VARCHAR(255) NOT NULL,
+  description TEXT
+);

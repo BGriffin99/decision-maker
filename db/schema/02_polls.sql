@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS polls CASCADE;
+CREATE TABLE polls (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_link VARCHAR(32) NOT NULL UNIQUE DEFAULT md5(random()::text),
+  submission_link VARCHAR(32) NOT NULL UNIQUE DEFAULT md5(random()::text)
+);
