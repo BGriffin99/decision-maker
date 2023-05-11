@@ -1,9 +1,12 @@
 const express = require('express');
 const router  = express.Router();
 const queries = require('../db/queries/queries');
+require('dotenv').config();
 const mailgun = require('mailgun-js');
-const mg = mailgun({apiKey: '6a07f7a754247dd0033cc0e0872b3823-6b161b0a-e157a78e', domain: 'sandbox3a085c90362d4f96b9723d55515896fb.mailgun.org'});
-
+const mg = mailgun({
+  apiKey: process.env.MAILGUN_API_KEY,
+  domain: process.env.MAILGUN_DOMAIN
+});
 router.post('/create', async function(req, res, next) {
   try {
     const { title, options, creator_email } = req.body;
