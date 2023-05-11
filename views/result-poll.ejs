@@ -54,11 +54,12 @@
             <canvas id="myChart"></canvas>
             <script>
               let xValues = [];
+              let yValues = [];
               <% poll.forEach(function(item) { %>
-                xValues.push('<%= item.choice_title %>');
+                xValues.push('<%= item.choice %>');
+                yValues.push('<%= item.score %>');
               <% }) %>
-              let yValues = [8, 6, 3, 2];
-              let barColors = ["red", "green","blue","orange","brown"];
+              let barColors = ["red","green","blue","orange","brown","pink","yellow","purple"];
               new Chart("myChart", {
                 type: "horizontalBar",
                 data: {

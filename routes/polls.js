@@ -4,23 +4,19 @@ const queries = require('../db/queries/queries');
 
 router.post('/:id/vote', async function(req, res, next) {
   try {
-    const { id: pollId } = req.params;
+    const submissionLink = req.params.id;
     const { name, rankings } = req.body;
 
-    const { rows: [{ id }] } = await db.query(
-      'INSERT INTO submissions (poll_id, name, rankings) VALUES ($1, $2, $3) RETURNING id',
-      [pollId, name, rankings]
-    );
+    const pollId = (await queries.getPollIdBySubmissionLink(submissionLink)).poll_id;
+    await queries.addSubmission(pollId, rankings, name);
 
-    const { rows: [{ creator_email }] } = await db.query(
-      'SELECT creator_email FROM polls WHERE id = $1',
-      [pollId]
-    );
+    // const { rows: [{ creator_email }] } = await db.query(
+    //   'SELECT creator_email FROM polls WHERE id = $1',
+    //   [pollId]
+    // );
 
-    let adminLink = "/polls/";
-    adminLink += (await queries.getPollLinks(pollId)).user_link;
-    adminLink += "/results";
-    res.redirect(adminLink);
+    const adminLink = (await queries.getPollLinks(pollId)).user_link;
+    res.redirect(`/polls/${adminLink}/results`);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -31,7 +27,6 @@ router.get('/:id', async function(req, res, next) {
   try {
     const submissionLink = req.params.id;
     const poll = await queries.getPollBySubmissionLink(submissionLink);
-    console.log(poll);
     res.render('show-poll', { submissionLink: submissionLink, title: poll[0].title, poll: poll });
   } catch (error) {
     console.error(error);
@@ -42,9 +37,9 @@ router.get('/:id', async function(req, res, next) {
 router.get('/:id/results', async function(req, res, next) {
   try {
     const userLink = req.params.id;
-    const poll = await queries.getPollByUserLink(userLink);
+    const poll = await queries.getPollResults(userLink);
     console.log(poll);
-    res.render('poll-results', { poll });
+    res.render('result-poll', { title: poll[0].title, poll });
   } catch (error) {
     console.error(error);
     next(error);

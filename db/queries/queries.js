@@ -41,11 +41,12 @@ const addChoice = (poll_id, choice, description) => {
 const addSubmission = (poll_id, choices_rank, name) => {
   return db.query(`
   INSERT INTO submissions (poll_id, choices_rank, name)
-  VALUES ($1, $2, $3);`,
+  VALUES ($1, string_to_array($2, ',')::INTEGER[], $3);`,
   [poll_id, choices_rank, name]
   )
     .then(res => res.rows)
     .catch(err => {
+      console.log(poll_id);
       throw new Error(`Failed to add submission: ${err.message}`);
     });
 };
@@ -76,6 +77,34 @@ const getPollForVoting = submissionLink => {
   [submissionLink]
   )
     .then(res => res.rows)
+    .catch(err => {
+      throw new Error(`Failed to get poll: ${err.message}`);
+    });
+};
+
+const getPollIdByUserLink = userLink => {
+  return db.query(`
+  SELECT polls.id AS poll_id
+  FROM polls
+    JOIN choices ON polls.id = choices.poll_id
+  WHERE polls.user_link = $1;`,
+  [userLink]
+  )
+    .then(res => res.rows[0])
+    .catch(err => {
+      throw new Error(`Failed to get poll: ${err.message}`);
+    });
+};
+
+const getPollIdBySubmissionLink = submissionLink => {
+  return db.query(`
+  SELECT polls.id AS poll_id
+  FROM polls
+    JOIN choices ON polls.id = choices.poll_id
+  WHERE polls.submission_link = $1;`,
+  [submissionLink]
+  )
+    .then(res => res.rows[0])
     .catch(err => {
       throw new Error(`Failed to get poll: ${err.message}`);
     });
@@ -124,17 +153,19 @@ const getChoiceCount = pollId => {
   WHERE poll_id = $1;`,
   [pollId]
   )
-    .then(res => res.rows)
+    .then(res => res.rows[0])
     .catch(err => {
       throw new Error(`Failed to get choice count: ${err.message}`);
     });
 };
 
-const getPollResults = pollId => {
-  const choiceCount = getChoiceCount(pollId);
+const getPollResults = async(userLink) => {
+  const pollId = (await getPollIdByUserLink(userLink)).poll_id;
+  const choiceCount = (await getChoiceCount(pollId)).count;
   let queryString = `
-    SELECT choices.choice,
-      choices.description,
+    SELECT polls.title AS title,
+      choices.choice AS choice,
+      choices.description AS description,
       SUM(
         CASE`;
   for (let i = 0; i < choiceCount; i++) { // loop through choices, apply weighting, and append to the query string
@@ -148,8 +179,10 @@ const getPollResults = pollId => {
     FROM choices
       JOIN polls ON polls.id = choices.poll_id
       JOIN submissions ON submissions.poll_id = polls.id
-    GROUP BY choices.id
+    WHERE polls.id = $1
+    GROUP BY choices.id, polls.title
     ORDER BY score DESC;`;
+  console.log(queryString);
   const values = [pollId];
   return db.query(queryString, values)
     .then(res => res.rows)
@@ -224,7 +257,9 @@ module.exports = {
   addSubmission,
   getPollTitle,
   getPollForVoting,
+  getPollIdBySubmissionLink,
   getPollBySubmissionLink,
+  getPollIdByUserLink,
   getPollByUserLink,
   getChoiceCount,
   getPollResults,
