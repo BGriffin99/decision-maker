@@ -16,14 +16,14 @@
       <form class="vote-form" method="POST" action="/polls/<%= submissionLink %>/vote" id="pollForm">
 <!-- Vote question-->
         <div class="vote-question">
-          <h1><%= title %></h1>
+          <h3><%= title %></h3>
           <p>Rank your choices from best to worst by dragging and dropping the options</p>
         </div>
 <!-- Vote options-->
         <div class="vote-set">
           <ol id="optionsList" class="list-group list-group-numbered">
             <% poll.forEach(function(item) { %>
-              <li class="list-group-item" data-option-id="<%= item.choice_id %>"><%= item.choice_title %></li>
+              <li class="list-group-item" data-option-id="<%= item.choice_id %>"><%= item.choice_title %><p class="m"><%=item.choice_description %></p></li>
             <% }) %>
           </ol>
         </div>

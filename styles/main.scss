@@ -94,6 +94,19 @@ header{
   color: $color-bg;
 }
 
+p.m {
+  margin: 0 !important;
+  font-size: smaller;
+  font-weight: 400;
+}
+
+p.l {
+  margin: 0 !important;
+  font-size: medium;
+  font-weight: 700;
+}
+
+
 .add-option-button, .submit-button {
   margin: 0 0 15px;
   height: 30px;

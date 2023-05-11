@@ -14,19 +14,19 @@
       <form class="poll-form" method="POST" action="/create">
 <!-- Poll question-->
         <div class="poll-question">
-          <label for="question" class="form-label">Title</label>
+          <label for="question" class="form-label"><p class="l">Title</p></label>
           <input type="text" class="form-control" id="question" name="title" placeholder="Enter your question here">
         </div>
 <!-- Poll option 1-->
         <div class="poll-options">
           <div class="poll-set">
             <div class="poll-option">
-              <label for="option" class="form-label">Poll options</label>
+              <label for="option" class="form-label"><p class="l">Poll options</p></label>
               <input type="text" class="form-control" id="option" name="choice" placeholder="Option 1" required>
             </div>
             <div class="poll-description">
-              <label for="description" class="form-label">Description</label>
-              <input type="text" class="form-control" id="description" name="choicedescription">
+              <label for="description" class="form-label"><p class="l">Description</p></label>
+              <input type="text" class="form-control" id="description" name="choicedescription" placeholder="Optional comment">
             </div>
           </div>
 <!-- Poll option 2-->
@@ -35,7 +35,7 @@
               <input type="text" class="form-control" id="option" name="choice" placeholder="Option 2" required>
             </div>
             <div class="poll-description">
-              <input type="text" class="form-control" id="description" name="choicedescription">
+              <input type="text" class="form-control" id="description" name="choicedescription" placeholder="Optional comment">
             </div>
           </div>
 <!-- Poll option 3 -->
@@ -44,7 +44,7 @@
               <input type="text" class="form-control" id="option" name="choice" placeholder="Option 3">
             </div>
             <div class="poll-description">
-              <input type="text" class="form-control" id="description" name="choicedescription">
+              <input type="text" class="form-control" id="description" name="choicedescription" placeholder="Optional comment">
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
           <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
           <label for="email" class="email">Enter your email address</label>
         </div>
-<!-- Enter voters emails -->
+<!-- Enter creator name -->
         <div class="form-floating mb-3">
           <input type="text" class="form-control" id="name" name="name" placeholder=" ">
           <label for="name" class="emails">Enter your name</label>
