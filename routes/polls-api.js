@@ -37,7 +37,7 @@ router.post('/:id/submissions', async function(req, res, next) {
       console.error(err);
       res.sendStatus(500);
     }
-  });
+  }); 
 
   // Add a route to create a new poll
 router.post('/polls', async function(req, res) {
