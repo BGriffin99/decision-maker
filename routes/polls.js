@@ -38,34 +38,34 @@ router.get('/:id/results', async function(req, res, next) {
   try {
     const userLink = req.params.id;
     const poll = await queries.getPollResults(userLink);
-    console.log(poll);
-    res.render('result-poll', { title: poll[0].title, poll });
+    const title = (await queries.getPollTitleByUserLink(userLink)).title;
+    res.render('result-poll', { title, poll });
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
 
-router.post('/:id/vote', async function(req, res, next) {
-  try {
-    const userLink = req.params.id;
-    const poll = await queries.getPollByUserLink(userLink);
-    const choice = req.body.choice;
-    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const existingVote = await queries.getVoteByIpAddressAndPollId(ipAddress, poll.id);
+// router.post('/:id/vote', async function(req, res, next) {
+//   try {
+//     const userLink = req.params.id;
+//     const poll = await queries.getPollByUserLink(userLink);
+//     const choice = req.body.choice;
+//     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+//     const existingVote = await queries.getVoteByIpAddressAndPollId(ipAddress, poll.id);
 
-    if (existingVote) {
-      throw new Error('You have already voted on this poll');
-    }
+//     if (existingVote) {
+//       throw new Error('You have already voted on this poll');
+//     }
 
-    const vote = await queries.createVote(poll.id, choice, ipAddress);
+//     const vote = await queries.createVote(poll.id, choice, ipAddress);
 
-    res.redirect(`/polls/${userLink}/results`);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
+//     res.redirect(`/polls/${userLink}/results`);
+//   } catch (error) {
+//     console.error(error);
+//     next(error);
+//   }
+// });
 
 
 // Add a route to create a new poll

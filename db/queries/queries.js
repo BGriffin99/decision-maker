@@ -46,7 +46,6 @@ const addSubmission = (poll_id, choices_rank, name) => {
   )
     .then(res => res.rows)
     .catch(err => {
-      console.log(poll_id);
       throw new Error(`Failed to add submission: ${err.message}`);
     });
 };
@@ -58,7 +57,20 @@ const getPollTitle = pollId => {
   WHERE polls.id = $1;`,
   [pollId]
   )
-    .then(res => res.rows)
+    .then(res => res.rows[0])
+    .catch(err => {
+      throw new Error(`Failed to get poll: ${err.message}`);
+    });
+};
+
+const getPollTitleByUserLink = userLink => {
+  return db.query(`
+  SELECT title
+  FROM polls
+  WHERE user_link = $1;`,
+  [userLink]
+  )
+    .then(res => res.rows[0])
     .catch(err => {
       throw new Error(`Failed to get poll: ${err.message}`);
     });
@@ -163,8 +175,7 @@ const getPollResults = async(userLink) => {
   const pollId = (await getPollIdByUserLink(userLink)).poll_id;
   const choiceCount = (await getChoiceCount(pollId)).count;
   let queryString = `
-    SELECT polls.title AS title,
-      choices.choice AS choice,
+    SELECT choices.choice AS choice,
       choices.description AS description,
       SUM(
         CASE`;
@@ -180,9 +191,8 @@ const getPollResults = async(userLink) => {
       JOIN polls ON polls.id = choices.poll_id
       JOIN submissions ON submissions.poll_id = polls.id
     WHERE polls.id = $1
-    GROUP BY choices.id, polls.title
+    GROUP BY choices.id
     ORDER BY score DESC;`;
-  console.log(queryString);
   const values = [pollId];
   return db.query(queryString, values)
     .then(res => res.rows)
@@ -256,6 +266,7 @@ module.exports = {
   addChoice,
   addSubmission,
   getPollTitle,
+  getPollTitleByUserLink,
   getPollForVoting,
   getPollIdBySubmissionLink,
   getPollBySubmissionLink,
