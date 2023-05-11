@@ -174,6 +174,25 @@ const getChoiceCount = pollId => {
 const getPollResults = async(userLink) => {
   const pollId = (await getPollIdByUserLink(userLink)).poll_id;
   const choiceCount = (await getChoiceCount(pollId)).count;
+  // let queryString = `
+  //   SELECT choices.choice AS choice,
+  //     choices.description AS description,
+  //     SUM(
+  //       CASE`;
+  // for (let i = 0; i < choiceCount; i++) { // loop through choices, apply weighting, and append to the query string
+  //   queryString += `
+  //         WHEN submissions.choices_rank [${i + 1}] = choices.id THEN ${choiceCount - i}`;
+  // }
+  // queryString += `
+  //         ELSE 0
+  //       END
+  //     ) AS score
+  //   FROM choices
+  //     JOIN polls ON polls.id = choices.poll_id
+  //     JOIN submissions ON submissions.poll_id = polls.id
+  //   WHERE polls.id = $1
+  //   GROUP BY choices.id
+  //   ORDER BY score DESC;`;
   let queryString = `
     SELECT choices.choice AS choice,
       choices.description AS description,
@@ -181,18 +200,38 @@ const getPollResults = async(userLink) => {
         CASE`;
   for (let i = 0; i < choiceCount; i++) { // loop through choices, apply weighting, and append to the query string
     queryString += `
-          WHEN submissions.choices_rank [${i + 1}] = choices.id THEN ${choiceCount - i}`;
+          WHEN submissions.choices_rank[${i + 1}] = choices.id THEN ${choiceCount - i}`;
   }
   queryString += `
           ELSE 0
         END
-      ) AS score
+      ) AS score,
+      ARRAY[`;
+  for (let i = 0; i < choiceCount; i++) {
+    queryString += `
+        SUM(CASE WHEN submissions.choices_rank[${i + 1}] = choices.id THEN 1 ELSE 0 END)`;
+    if (i !== choiceCount - 1) {
+      queryString += `,`;
+    }
+  }
+  queryString += `
+      ] AS vote_counts
     FROM choices
       JOIN polls ON polls.id = choices.poll_id
       JOIN submissions ON submissions.poll_id = polls.id
     WHERE polls.id = $1
     GROUP BY choices.id
-    ORDER BY score DESC;`;
+    ORDER BY
+      score DESC,`;
+  for (let i = 0; i < choiceCount; i++) {
+    queryString += `
+      SUM(CASE WHEN submissions.choices_rank[${i + 1}] = choices.id THEN 1 ELSE 0 END) DESC`;
+    if (i !== choiceCount - 1) {
+      queryString += `,`;
+    }
+  }
+  queryString += `;`;
+  console.log(queryString);
   const values = [pollId];
   return db.query(queryString, values)
     .then(res => res.rows)
