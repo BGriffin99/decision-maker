@@ -24,10 +24,25 @@
   align-items: center;
   width:100%;
   margin: 0 15px 10px;
-  padding:0 25px;
 }
 
-.vote-option {
+#optionsList {
+  width: 80%;
+  padding: 0 20%;
+
+}
+
+.list-group-item {
+  width: 100%;
+  min-height: 40px;
+  border-radius: 5px;
+  background-color: $color-bg !important;
+  color: $color-font-main !important;
+  margin: 5px 0;
+  padding: 5px;
+}
+
+/*.vote-option {
   width: 100%;
   min-height: 40px;
   border-radius: 15px;
@@ -37,8 +52,8 @@
   color: $color-font-main;
   margin: 15px 0;
   padding: 5px;
-  cursor: move; /*related to drag and drop functionality*/
-}
+  cursor: move; /*related to drag and drop functionality
+}*/
 
 .vote-option:hover {
   background-color: $color-bg;
