@@ -7,35 +7,6 @@ const mg = mailgun({
   apiKey: process.env.MAILGUN_API_KEY,
   domain: process.env.MAILGUN_DOMAIN
 });
-router.post('/create', async function(req, res, next) {
-  try {
-    const { title, options, creator_email } = req.body;
-
-    // Insert poll into database and get submission link and user link
-    const { submissionLink, userLink } = await queries.createPoll(title, options, creator_email);
-
-    // Send email to poll creator with admin link and submission link
-    const emailData = {
-      from: 'Poll App <pollapp@example.com>',
-      to: creator_email,
-      subject: 'Your Poll Links',
-      text: `Here's your admin link for the poll: ${userLink}\nHere's the submission link for the poll: ${submissionLink}`
-    };
-
-    mg.messages().send(emailData, function (error, body) {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(body);
-      }
-    });
-
-    res.redirect(`/polls/${submissionLink}`);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-});
 
 router.post('/:id/vote', async function(req, res, next) {
   try {
