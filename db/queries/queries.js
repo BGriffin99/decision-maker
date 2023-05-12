@@ -231,7 +231,6 @@ const getPollResults = async(userLink) => {
     }
   }
   queryString += `;`;
-  console.log(queryString);
   const values = [pollId];
   return db.query(queryString, values)
     .then(res => res.rows)
