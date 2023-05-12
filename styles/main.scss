@@ -27,6 +27,10 @@ header{
   padding-left: 5%;
 
 }
+a.nodecor {
+  color:white !important;
+  text-decoration: none !important;
+}
 
 #logo{
   width:100%;
@@ -35,6 +39,7 @@ header{
   font-size: 2.3em;
   font-family: $font-title;
   color: $color-font-main;
+  text-decoration: none;
 }
 
 #home-logo{
