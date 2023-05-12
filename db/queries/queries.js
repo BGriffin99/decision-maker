@@ -298,6 +298,41 @@ const getPollID = (userID, title) => {
     });
 };
 
+// const getLatestSubmission = () => {
+//   return db.query(`
+//   SELECT id AS submission_id
+//   FROM submissions
+//   ORDER BY id DESC
+//   LIMIT 1;`,
+//   [userID, title]
+//   )
+//     .then(res => res.rows[0])
+//     .catch(err => {
+//       throw new Error(`Failed to get submission: ${err.message}`);
+//     });
+// }
+
+const getSubmissionEmail = (pollId) => {
+  return db.query(`
+  SELECT users.email AS email,
+    users.name AS name,
+    polls.title AS title,
+    polls.user_link AS user_link,
+    polls.submission_link AS submission_link
+  FROM users
+    JOIN polls ON users.id = polls.user_id
+    JOIN submissions ON submissions.poll_id = polls.id
+  WHERE polls.id = $1
+  ORDER BY submissions.id DESC
+  LIMIT 1;`,
+  [pollId]
+  )
+    .then(res => res.rows[0])
+    .catch(err => {
+      throw new Error(`Failed to get submission info: ${err.message}`);
+    });
+}
+
 module.exports = {
   addUser,
   addPoll,
@@ -315,5 +350,6 @@ module.exports = {
   getPollLinks,
   getUser,
   getUserID,
-  getPollID
+  getPollID,
+  getSubmissionEmail
 };
