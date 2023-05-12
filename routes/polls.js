@@ -16,10 +16,25 @@ router.post('/:id/vote', async function(req, res, next) {
     const pollId = (await queries.getPollIdBySubmissionLink(submissionLink)).poll_id;
     await queries.addSubmission(pollId, rankings, name);
 
-    // const { rows: [{ creator_email }] } = await db.query(
-    //   'SELECT creator_email FROM polls WHERE id = $1',
-    //   [pollId]
-    // );
+    const submission = await queries.getSubmissionEmail(pollId);
+
+    // Send email to poll creator with submission update notification
+    const emailData = {
+      from: 'Pollarizing App <pollarizing@example.com>',
+      to: submission.email,
+      subject: 'New submission for your poll',
+      text: `Someone has submitted their rankings for your poll "${submission.title}"!\n
+Here's your admin link for the poll to view the results:\nhttp://localhost:8080/polls/${submission.user_link}/results\n
+Here's the voting link for the poll if you'd like to share with more friends:\nhttp://localhost:8080/polls/${submission.submission_link}\n`
+    };
+
+    mg.messages().send(emailData, function (error, body) {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(body);
+      }
+    });
 
     const adminLink = (await queries.getPollLinks(pollId)).user_link;
     res.redirect(`/polls/${adminLink}/results`);
@@ -52,71 +67,4 @@ router.get('/:id/results', async function(req, res, next) {
   }
 });
 
-router.post('/:id/vote', async function(req, res, next) {
-  try {
-    const submissionLink = req.params.id;
-    const { name, rankings } = req.body;
-
-    const pollId = (await queries.getPollIdBySubmissionLink(submissionLink)).poll_id;
-    await queries.addSubmission(pollId, rankings, name);
-
-    const { creator_email, title } = await queries.getPollCreatorEmailAndTitle(pollId);
-
-    // Send email to poll creator with submission update notification
-    const emailData = {
-      from: 'Poll App <pollapp@example.com>',
-      to: creator_email,
-      subject: `New submission for your poll "${title}"`,
-      text: `Someone has submitted their rankings for your poll. Check the results here: ${process.env.BASE_URL}/polls/${submissionLink}/results`
-    };
-
-    mg.messages().send(emailData, function (error, body) {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(body);
-      }
-    });
-
-    const adminLink = (await queries.getPollLinks(pollId)).user_link;
-    res.redirect(`/polls/${adminLink}/results`);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-});
-
-router.post('/', async function(req, res, next) {
-  try {
-    const { title, creator_email, choices } = req.body;
-    const userLink = generateRandomString(8);
-    const submissionLink = generateRandomString(8);
-
-    const poll = await queries.createPoll(title, creator_email, userLink, submissionLink);
-
-    const choicesArray = choices.split('\n').filter(choice => choice !== '');
-    await Promise.all(choicesArray.map(choice => queries.createChoice(poll.id, choice)));
-
-    // Send email to poll creator with admin link and submission link
-    const emailData = {
-      from: 'Poll App <pollapp@example.com>',
-      to: creator_email,
-      subject: `Your poll "${title}" has been created`,
-      text: `Your poll has been created. You can view the results and manage the poll at ${process.env.BASE_URL}/polls/${userLink}/results.\n\nTo submit your rankings for the poll, visit ${process.env.BASE_URL}/polls/${submissionLink}`
-    };
-
-    mg.messages().send(emailData, function (error, body) {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(body);
-      }
-    });
-
-    res.redirect(`/polls/${userLink}/results`);
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
-  }
-});
 module.exports = router;
