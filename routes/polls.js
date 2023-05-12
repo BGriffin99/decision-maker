@@ -1,150 +1,70 @@
 const express = require('express');
 const router  = express.Router();
 const queries = require('../db/queries/queries');
+require('dotenv').config();
+const mailgun = require('mailgun-js');
+const mg = mailgun({
+  apiKey: process.env.MAILGUN_API_KEY,
+  domain: process.env.MAILGUN_DOMAIN
+});
 
 router.post('/:id/vote', async function(req, res, next) {
-    try {
-      const { pollId } = req.params;
-      const { name, rankings } = req.body;
-
-      // Insert the submission into the database
-      const { rows: [{ id }] } = await db.query(
-        'INSERT INTO submissions (poll_id, name, rankings) VALUES ($1, $2, $3) RETURNING id',
-        [pollId, name, rankings]
-      );
-
-      // Get the creator email
-      const { rows: [{ creator_email }] } = await db.query(
-        'SELECT creator_email FROM polls WHERE id = $1',
-        [pollId]
-      );
-
-      // Generate admin link and result link
-      // const adminLink = `${req.protocol}://${req.get('host')}/polls/${pollId}/results`;
-      // const voteLink = `${req.protocol}://${req.get('host')}/polls/${pollId}`;
-
-      // Send email to the creator with the links
-      await mailer.sendSubmissionReceivedEmail(creator_email, adminLink, voteLink);
-      let adminLink = "/polls/";
-      adminLink += (await queries.getPollLinks(pollID)).user_link;
-      adminLink += "/results";
-      res.redirect(adminLink);
-    } catch (err) {
-      console.error(err);
-      res.sendStatus(500);
-    }
-  });
-
-// Add a route to create a new poll
-// router.post('/', async function(req, res) {
-//   try {
-//     const { creatorEmail, choices } = req.body;
-
-//     // Insert the poll into the database and get the ID
-//     const { rows: [{ id }] } = await db.query(
-//       'INSERT INTO polls (creator_email) VALUES ($1) RETURNING id',
-//       [creatorEmail]
-//     );
-
-//     // Insert the choices into the database
-//     await Promise.all(choices.map(({ title, description }) =>
-//       db.query(
-//         'INSERT INTO choices (poll_id, title, description) VALUES ($1, $2, $3)',
-//         [id, title, description]
-//       )
-//     ));
-
-//     // Generate submission and admin links
-//     const submissionLink = `${req.protocol}://${req.get('host')}/polls/${id}`;
-//     const adminLink = `${req.protocol}://${req.get('host')}/polls/${id}/admin`;
-
-//     // Send email to the creator with the links
-//     await mailer.sendPollCreatedEmail(creatorEmail, submissionLink, adminLink);
-
-//     res.status(201).json({ submissionLink, adminLink });
-//   } catch (err) {
-//     console.error(err);
-//     res.sendStatus(500);
-//   }
-// });
-
-// vote link
-router.get('/:id', async function(req, res, next) {
   try {
     const submissionLink = req.params.id;
-    const poll = await queries.getPollBySubmissionLink(submissionLink);
-    console.log(poll);
-    res.render('show-poll', { submissionLink: submissionLink, title: poll[0].title, poll: poll });
-  } catch (error) {
+    const { name, rankings } = req.body;
+
+    const pollId = (await queries.getPollIdBySubmissionLink(submissionLink)).poll_id;
+    await queries.addSubmission(pollId, rankings, name);
+
+    const submission = await queries.getSubmissionEmail(pollId);
+
+    // Send email to poll creator with submission update notification
+    const emailData = {
+      from: 'Pollarizing App <pollarizing@example.com>',
+      to: submission.email,
+      subject: 'New submission for your poll',
+      text: `Someone has submitted their rankings for your poll "${submission.title}"!\n
+Here's your admin link for the poll to view the results:\nhttp://localhost:8080/polls/${submission.user_link}/results\n
+Here's the voting link for the poll if you'd like to share with more friends:\nhttp://localhost:8080/polls/${submission.submission_link}\n`
+    };
+
+    mg.messages().send(emailData, function (error, body) {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(body);
+      }
+    });
+
+    const adminLink = (await queries.getPollLinks(pollId)).user_link;
+    res.redirect(`/polls/${adminLink}/results`);
+  } catch (err) {
     console.error(err);
     res.sendStatus(500);
   }
 });
 
-// admin link
+router.get('/:id', async function(req, res, next) {
+  try {
+    const submissionLink = req.params.id;
+    const poll = await queries.getPollBySubmissionLink(submissionLink);
+    res.render('show-poll', { submissionLink: submissionLink, title: poll[0].title, poll: poll });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
 router.get('/:id/results', async function(req, res, next) {
   try {
     const userLink = req.params.id;
-    const poll = await queries.getPollByUserLink(userLink);
-    console.log(poll);
-    res.render('result-poll', { title: poll[0].title, poll: poll });
+    const poll = await queries.getPollResults(userLink);
+    const title = (await queries.getPollTitleByUserLink(userLink)).title;
+    res.render('result-poll', { title, poll });
   } catch (error) {
+    console.error(error);
     next(error);
   }
 });
-
-/*
-router.get('/:id/results', async function(req, res, next) {
-  try {
-    // Get the poll details from the database
-    const pollId = req.params.id;
-    const { rows: [poll] } = await db.query(
-      'SELECT * FROM polls WHERE id = $1', [pollId]
-    );
-
-    // Make sure the poll exists
-    if (!poll) {
-      return res.status(404).send('Poll not found');
-    }
-
-    // Make sure the request is coming from the creator's email address
-    const creatorEmail = poll.creator_email;
-    if (req.query.email !== creatorEmail) {
-      return res.status(403).send('Access denied');
-    }
-
-    // Get the poll choices and submissions from the database
-    const { rows: [{ choices, submissions }] } = await db.query(
-      'SELECT ' +
-      '  json_agg(choices) as choices, ' +
-      '  json_agg(submissions) as submissions ' +
-      'FROM choices ' +
-      'LEFT JOIN submissions ON choices.id = submissions.choice_id ' +
-      'WHERE choices.poll_id = $1 ' +
-      'ORDER BY choices.id', [pollId]
-    );
-
-    // Compute the poll results using the Borda count method
-    const results = {};
-    choices.forEach((choice, index) => {
-      results[choice.title] = submissions.reduce((score, submission) => {
-        const rank = submission.rankings[index];
-        return score + (choices.length - rank);
-      }, 0);
-    });
-
-    // Render the poll results page
-    res.render('poll-results', {
-      poll,
-      choices,
-      results,
-      adminLink: `${req.protocol}://${req.get('host')}/polls/${pollId}/admin?email=${encodeURIComponent(creatorEmail)}`,
-      submissionLink: `${req.protocol}://${req.get('host')}/polls/${pollId}/submit`
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-*/
 
 module.exports = router;

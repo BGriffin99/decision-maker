@@ -37,7 +37,7 @@ router.post('/:id/submissions', async function(req, res, next) {
       console.error(err);
       res.sendStatus(500);
     }
-  });
+  }); 
 
   // Add a route to create a new poll
 router.post('/polls', async function(req, res) {
@@ -72,69 +72,6 @@ router.post('/polls', async function(req, res) {
   }
 });
 
-router.get('/polls/:id', async function(req, res, next) {
-  try {
-    const { rows: [{ choices }] } = await db.query(
-      'SELECT json_agg(choices) FROM choices WHERE poll_id = $1',
-      [req.params.id]
-    );
-    res.render('poll', { choices, pollId: req.params.id });
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-});
 
-router.get('/polls/:id/admin', async function(req, res, next) {
-  try {
-    // Get the poll details from the database
-    const pollId = req.params.id;
-    const { rows: [poll] } = await db.query(
-      'SELECT * FROM polls WHERE id = $1', [pollId]
-    );
-
-    // Make sure the poll exists
-    if (!poll) {
-      return res.status(404).send('Poll not found');
-    }
-
-    // Make sure the request is coming from the creator's email address
-    const creatorEmail = poll.creator_email;
-    if (req.query.email !== creatorEmail) {
-      return res.status(403).send('Access denied');
-    }
-
-    // Get the poll choices and submissions from the database
-    const { rows: [{ choices, submissions }] } = await db.query(
-      'SELECT ' +
-      '  json_agg(choices) as choices, ' +
-      '  json_agg(submissions) as submissions ' +
-      'FROM choices ' +
-      'LEFT JOIN submissions ON choices.id = submissions.choice_id ' +
-      'WHERE choices.poll_id = $1 ' +
-      'ORDER BY choices.id', [pollId]
-    );
-
-    // Compute the poll results using the Borda count method
-    const results = {};
-    choices.forEach((choice, index) => {
-      results[choice.title] = submissions.reduce((score, submission) => {
-        const rank = submission.rankings[index];
-        return score + (choices.length - rank);
-      }, 0);
-    });
-
-    // Render the poll results page
-    res.render('poll-results', {
-      poll,
-      choices,
-      results,
-      adminLink: `${req.protocol}://${req.get('host')}/polls/${pollId}/admin?email=${encodeURIComponent(creatorEmail)}`,
-      submissionLink: `${req.protocol}://${req.get('host')}/polls/${pollId}/submit`
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
   module.exports = router;

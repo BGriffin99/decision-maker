@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Pollarizing - Share Poll</title>
+  <%- include('partials/_head') %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.js"></script>
+</head>
+<body>
+  <%- include('partials/_header') %>
+  <main class="container">
+    <section class="vote-section">
+      <form class="vote-form">
+<!-- Vote question-->
+        <div class="vote-question">
+          <h3><%= title %></h3>
+          <p>Your poll has been created.<br />
+          You will receive an email notification every time a new vote is submitted</p>
+        </div>
+<!-- Vote options-->
+        <div class="vote-set">
+          <p>This is the voting link</p>
+          <a href="/polls/<%= submissionLink %>"><h5>http://localhost:8080/polls/<%= submissionLink %></h5></a>
+          <div class="ss-box ss-circle" data-ss-content="false" data-ss-link="http://localhost:8080/polls/<%= submissionLink %>"></div>
+          <p>Click on the icons to share with friends<br /><br /></p>
+          <p>Click here to view the poll results</p>
+          <a href="/polls/<%= userLink %>/results"><h5>http://localhost:8080/polls/<%= userLink %>/results</h5></a>
+          <p>These links have also been sent to your email</p>
+        </div>
+      </form>
+    </section>
+  </main>
+  <%- include('partials/_footer') %>
+</body>
+</html>
