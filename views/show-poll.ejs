@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Decision Maker - <%= title %> Poll </title>
-  <%- include('partials/_header') %>
+  <title>Pollarizing - <%= title %> Poll </title>
+  <%- include('partials/_head') %>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </head>
 <body>
-  <header>
-    <div id="home-logo"><a href="/"><img src="/images/arrows.png" alt="Arrows picture" id="logo-pic"/></a></div>
-    <div id="logo"><a class="nodecor" href="/">Pollarizing</a></div>
-  </header>
-
+  <%- include('partials/_header') %>
   <main class="container">
     <section class="vote-section">
       <form class="vote-form" method="POST" action="/polls/<%= submissionLink %>/vote" id="pollForm">

@@ -174,25 +174,7 @@ const getChoiceCount = pollId => {
 const getPollResults = async(userLink) => {
   const pollId = (await getPollIdByUserLink(userLink)).poll_id;
   const choiceCount = (await getChoiceCount(pollId)).count;
-  // let queryString = `
-  //   SELECT choices.choice AS choice,
-  //     choices.description AS description,
-  //     SUM(
-  //       CASE`;
-  // for (let i = 0; i < choiceCount; i++) { // loop through choices, apply weighting, and append to the query string
-  //   queryString += `
-  //         WHEN submissions.choices_rank [${i + 1}] = choices.id THEN ${choiceCount - i}`;
-  // }
-  // queryString += `
-  //         ELSE 0
-  //       END
-  //     ) AS score
-  //   FROM choices
-  //     JOIN polls ON polls.id = choices.poll_id
-  //     JOIN submissions ON submissions.poll_id = polls.id
-  //   WHERE polls.id = $1
-  //   GROUP BY choices.id
-  //   ORDER BY score DESC;`;
+
   let queryString = `
     SELECT choices.choice AS choice,
       choices.description AS description,
@@ -297,20 +279,6 @@ const getPollID = (userID, title) => {
       throw new Error(`Failed to get poll: ${err.message}`);
     });
 };
-
-// const getLatestSubmission = () => {
-//   return db.query(`
-//   SELECT id AS submission_id
-//   FROM submissions
-//   ORDER BY id DESC
-//   LIMIT 1;`,
-//   [userID, title]
-//   )
-//     .then(res => res.rows[0])
-//     .catch(err => {
-//       throw new Error(`Failed to get submission: ${err.message}`);
-//     });
-// }
 
 const getSubmissionEmail = (pollId) => {
   return db.query(`

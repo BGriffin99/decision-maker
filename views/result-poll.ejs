@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Decision Maker - <%= title %> Results</title>
-  <%- include('partials/_header') %>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  <title>Pollarizing - <%= title %> Results</title>
+  <%- include('partials/_head') %>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/dist/he.min.js"></script>
 </head>
 <body>
-  <header>
-    <div id="home-logo"><a href="/"><img src="/images/arrows.png" alt="Arrows picture" id="logo-pic"/></a></div>
-    <div id="logo"><a class="nodecor" href="/">Pollarizing</a></div>
-  </header>
+  <%- include('partials/_header') %>
     <main class="container">
       <section class="vote-section">
         <form class="vote-form">
@@ -29,10 +26,11 @@
                 let data = new google.visualization.DataTable();
                 data.addColumn('string', 'Choice');
                 data.addColumn('number', 'Score');
+                data.addColumn({type: 'string', role: 'style'});
                 data.addColumn({type: 'string', role: 'tooltip'});
 
                 <% poll.forEach(function(choice) { %>
-                  data.addRow(['<%= choice.choice %>', <%= choice.score %>, '<%= choice.score %> Score -- <%= choice.vote_counts %> Votes']);
+                  data.addRow([unescape('<%= escape(choice.choice) %>'), <%= choice.score %>, '#'+(Math.random()*0xFFFFFF<<0).toString(16), '<%= choice.score %> Score -- <%= choice.vote_counts %> Votes']);
                 <% }); %>
 
                 let options = {
@@ -45,7 +43,11 @@
                 chart.draw(data, options);
               }
             </script>
-            <small>Scoring is based on the Modified Borda count. Any unranked options receive 0 points, the lowest ranked receives 1, the next-lowest receives 2, etc., up to a possible maximum of n points for the highest ranked option. In case of a tie, the tiebreak is given to the option with the most highest ranked votes.</small>
+            <div class="vote-question">
+            <small><small>Scoring is based on the Modified Borda count.
+            The lowest ranked option receives 1 point, the next-lowest receives 2, etc., up to a possible maximum of n points for the highest ranked option.
+            In case of a tie, the tiebreak is given to the option with the most highest ranked votes.</small></small>
+          </div>
           </div>
         </form>
       </section>
