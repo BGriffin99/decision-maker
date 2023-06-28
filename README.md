@@ -4,12 +4,30 @@ If you or someone you love struggles with making quick and effective decisions, 
 
 Thank you for trying our app, and we hope it helps you make the right decision!
 
+### Short demo video
+![Demovideo](/public/images/demo11.gif)
+
+### The main page
+![Main page](/public/images/home.png)
+
+### Create poll
+![Main page](/public/images/create.png)
+
+### Share poll
+![Main page](/public/images/share.png)
+
+### Vote page with drag and drop functionality
+![Main page](/public/images/vote.png)
+
+### Vote result
+![Main page](/public/images/result.png)
+
 ## Setup Instructions
 - Clone the repository to a new folder using git clone <new folder>
 - Install dependencies using npm i
 - Within a psql environment, create a new database with create database <db name> owner <user>;
 - Create a .env file in the root folder and add the following:
-  -  DB_HOST=<host>
+  - DB_HOST=<host>
   - DB_USER=<user>
   - DB_PASS=<pass>
   - DB_NAME=<db name>
